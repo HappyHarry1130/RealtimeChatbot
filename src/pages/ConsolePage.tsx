@@ -47,14 +47,15 @@ export function ConsolePage() {
    * If we're using the local relay server, we don't need this
    */
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const apiKey = LOCAL_RELAY_SERVER_URL
-    ? ''
-    : localStorage.getItem('tmp::voice_api_key') ||
-      prompt('OpenAI API Key') ||
-      '';
-  if (apiKey !== '') {
-    localStorage.setItem('tmp::voice_api_key', apiKey);
-  }
+  // const apiKey = LOCAL_RELAY_SERVER_URL
+  //   ? ''
+  //   : localStorage.getItem('tmp::voice_api_key') ||
+  //     prompt('OpenAI API Key') ||
+  //     '';
+  // if (apiKey !== '') {
+  //   localStorage.setItem('tmp::voice_api_key', apiKey);
+  // }
+  const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
 
   /**
    * Instantiate:
@@ -68,16 +69,23 @@ export function ConsolePage() {
   const wavStreamPlayerRef = useRef<WavStreamPlayer>(
     new WavStreamPlayer({ sampleRate: 24000 })
   );
-  const clientRef = useRef<RealtimeClient>(
-    new RealtimeClient(
-      LOCAL_RELAY_SERVER_URL
-        ? { url: LOCAL_RELAY_SERVER_URL }
-        : {
-            apiKey: apiKey,
-            dangerouslyAllowAPIKeyInBrowser: true,
-          }
-    )
+
+  const clientRef = useRef(
+    new RealtimeClient({
+      apiKey: apiKey,
+      dangerouslyAllowAPIKeyInBrowser: true,
+    })
   );
+  // const clientRef = useRef<RealtimeClient>(
+  //   new RealtimeClient(
+  //     LOCAL_RELAY_SERVER_URL
+  //       ? { url: LOCAL_RELAY_SERVER_URL }
+  //       : {
+  //           apiKey: apiKey,
+  //           dangerouslyAllowAPIKeyInBrowser: true,
+  //         }
+  //   )
+  // );
 
   /**
    * References for
